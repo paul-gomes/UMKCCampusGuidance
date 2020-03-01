@@ -1,0 +1,24 @@
+{
+  "buildings": [
+    {
+      "name": "Flarsheim Hall",
+      "long": -94.576208,
+      "lat": 39.033741
+    },
+    {
+      "name": "Cockefair Hall",
+      "long": -94.575232,
+      "lat": 39.033032
+    },
+    {
+      "name": "Royall Hall",
+      "long": -94.576987,
+      "lat": 39.033148
+    },
+    {
+      "name": "Grant Hall",
+      "long": -94.577267,
+      "lat": 39.031722
+    }
+  ]
+}
