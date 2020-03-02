@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
-import { Map, tileLayer, marker } from "leaflet";
+import { Map, tileLayer, marker, icon } from "leaflet";
+import { IBuilding } from "./buuilding";
 
 @Component({
   selector: "app-tab2",
@@ -8,6 +9,7 @@ import { Map, tileLayer, marker } from "leaflet";
 })
 export class Tab2Page {
   map: Map;
+  buildings: [IBuilding];
   constructor() {}
 
   ionViewDidEnter() {
@@ -17,8 +19,44 @@ export class Tab2Page {
   loadMap(): void {
     this.map = new Map("map").setView([39.034924, -94.578561], 25);
     tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors,<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY- SA</a>'
+      attribution: "UMKC Campus Guidance"
     }).addTo(this.map); // This line is added to add the Tile Layer to our map
+
+    this.map.on("click", <LeafletMouseEvent>(e) => {
+      console.log(e);
+      var coord = e.latlng;
+      var lat = coord.lat;
+      var lng = coord.lng;
+      console.log(
+        "You clicked the map at latitude: " + lat + " and longitude: " + lng
+      );
+    });
+
+    fetch("./assets/buildings.json")
+      .then(res => res.json())
+      .then(json => {
+        this.buildings = json.buildings;
+        this.createMarker();
+      });
+  }
+
+  createMarker(): void {
+    let buildingIcon = icon({
+      iconUrl: "./assets/icon/building.png",
+      iconSize: [38, 45] // size of the icon
+    });
+
+    for (const building of this.buildings) {
+      let popUpMsg = `<h5>${building.name}</h5><ion-button size="small">
+      <ion-icon slot="icon-only" name="navigate-circle"></ion-icon>
+    </ion-button>`;
+      marker([building.lat, building.long], { icon: buildingIcon })
+        .addTo(this.map)
+        .bindPopup(`${popUpMsg}`, {
+          closeOnClick: false,
+          autoClose: false
+        })
+        .openPopup();
+    }
   }
 }
