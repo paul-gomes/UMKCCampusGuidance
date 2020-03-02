@@ -15,6 +15,9 @@ export class HttpService {
   constructor(private http: HttpClient) {}
 
   public getText(image) {
+    const formData = new FormData();
+    formData.append('file', image);
+
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json',
@@ -23,6 +26,6 @@ export class HttpService {
       })
     };
 
-    return this.http.post(`${OCR_URL}`, image, httpOptions);
+    return this.http.post(`${OCR_URL}`, formData, httpOptions);
   }
 }
