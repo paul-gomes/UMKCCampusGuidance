@@ -5,14 +5,18 @@
 </ion-header>
 
 <ion-content>
-
   <div class="container">
+    <div class="error-msg" *ngIf="message !== ''">{{message}}</div>
+
     <div>Add Image of Schedule:</div>
+
     <div class="btn-container">
       <ion-button (click)="takePicture()">Take Picture</ion-button>
+
       <ion-button (click)="chooseImage()">Upload from Library</ion-button>
     </div>
-    {{text}}
-  </div>
 
+    {{text}}
+
+  </div>
 </ion-content>

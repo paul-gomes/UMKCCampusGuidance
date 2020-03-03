@@ -10,6 +10,7 @@ import { File } from '@ionic-native/file/ngx';
 })
 export class UploadSchedulePage implements OnInit {
   text = '';
+  message = '';
 
   imagePickerOptions = {
     maximumImagesCount: 1,
@@ -22,16 +23,6 @@ export class UploadSchedulePage implements OnInit {
 
   ngOnInit() { }
 
-  getText(image) {
-    this.httpService.getText(image).subscribe((data) => {
-      if (data['OCRText'] === 0) {
-        this.text = data['OCRErrorMessage'];
-        return;
-      }
-      this.text = data['OCRText'][0];
-    });
-  }
-
   takePicture() {
     this.pickImage(this.camera.PictureSourceType.CAMERA);
   }
@@ -42,23 +33,24 @@ export class UploadSchedulePage implements OnInit {
 
   pickImage(source) {
     const options: CameraOptions = {
-      quality: 100,
-      sourceType: source,
+      quality: 100, sourceType: source,
       destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     }
     this.camera.getPicture(options).then((imageData) => {
-      // imageData is either a base64 encoded string or a file URI
-      // If it's base64 (DATA_URL):
-      // let base64Image = 'data:image/jpeg;base64,' + imageData;
-
-      // ImageData = content://com.android.providers.media.documents/document/image%3A13
-
-      this.getText(imageData);
       this.text = imageData;
+      this.httpService.getText(imageData).subscribe((data) => {
+        if (data['OCRText'] === 0) {
+          this.text = '';
+          this.message = data['OCRErrorMessage'];
+          return;
+        }
+        this.message = '';
+        this.text = data['OCRText'][0];
+      });
     }, (err) => {
-      // Handle error
+      this.message = err.toString();
     });
   }
 }

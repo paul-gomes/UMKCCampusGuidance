@@ -12,20 +12,27 @@ const OCR_LICENSE_CODE = '15A951E7-59B3-412C-94D5-0CF5A9021728';
 
 export class HttpService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private file: File) {}
 
-  public getText(image) {
-    const formData = new FormData();
-    formData.append('file', image);
+  public getText(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const formData = new FormData();
+      const imgBlob = new Blob([reader.result], {
+        type: file.type
+      });
+      formData.append('file', imgBlob, file.name);
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        Authorization: OCR_USERNAME + ':' + OCR_LICENSE_CODE,
-        'Content-Length': image.length.toString()
-      })
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json',
+          'Authorization': OCR_USERNAME + ':' + OCR_LICENSE_CODE
+          'Content-Length': image.length.toString()
+        })
+      };
+
+      return this.http.post(`${OCR_URL}`, formData, httpOptions);
     };
-
-    return this.http.post(`${OCR_URL}`, formData, httpOptions);
+    reader.readAsArrayBuffer(file);
   }
 }
