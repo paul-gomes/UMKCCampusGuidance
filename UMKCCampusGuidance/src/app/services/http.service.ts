@@ -14,25 +14,36 @@ export class HttpService {
 
   constructor(private http: HttpClient, private file: File) {}
 
-  public getText(file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const formData = new FormData();
-      const imgBlob = new Blob([reader.result], {
-        type: file.type
-      });
-      formData.append('file', imgBlob, file.name);
+  // public getText(file) {
+  //   const reader = new FileReader();
+  //   const formData = new FormData();
+  //   let httpOptions = {};
+  //   reader.onload = () => {
+  //     const imgBlob = new Blob([reader.result], {
+  //       type: file.type
+  //     });
+  //     formData.append('file', imgBlob, file.name);
+  //
+  //     httpOptions = {
+  //       headers: new HttpHeaders({
+  //         'Content-Type':  'application/json',
+  //         Authorization: OCR_USERNAME + ':' + OCR_LICENSE_CODE,
+  //         'Content-Length': file.length.toString()
+  //       })
+  //     };
+  //   };
+  //   reader.readAsArrayBuffer(file);
+  //   return this.http.post(`${OCR_URL}`, formData, httpOptions);
+  // }
 
-      const httpOptions = {
+  public getText(file) {
+    const httpOptions = {
         headers: new HttpHeaders({
           'Content-Type':  'application/json',
-          'Authorization': OCR_USERNAME + ':' + OCR_LICENSE_CODE
-          'Content-Length': image.length.toString()
+          Authorization: OCR_USERNAME + ':' + OCR_LICENSE_CODE,
+          'Content-Length': file.length.toString()
         })
       };
-
-      return this.http.post(`${OCR_URL}`, formData, httpOptions);
-    };
-    reader.readAsArrayBuffer(file);
+    return this.http.post(`${OCR_URL}`, file, httpOptions);
   }
 }
