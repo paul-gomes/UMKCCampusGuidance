@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Map, tileLayer, marker, icon } from "leaflet";
+import { Map, tileLayer, marker, icon, circle } from "leaflet";
 import { IBuilding } from "./buuilding";
 
 @Component({
@@ -10,6 +10,7 @@ import { IBuilding } from "./buuilding";
 export class Tab2Page {
   map: Map;
   buildings: [IBuilding];
+  isCurrentLocationShown: boolean = false;
   constructor() {}
 
   ionViewDidEnter() {
@@ -22,15 +23,15 @@ export class Tab2Page {
       attribution: "UMKC Campus Guidance"
     }).addTo(this.map); // This line is added to add the Tile Layer to our map
 
-    this.map.on("click", <LeafletMouseEvent>(e) => {
-      console.log(e);
-      var coord = e.latlng;
-      var lat = coord.lat;
-      var lng = coord.lng;
-      console.log(
-        "You clicked the map at latitude: " + lat + " and longitude: " + lng
-      );
-    });
+    // this.map.on("click", <LeafletMouseEvent>(e) => {
+    //   console.log(e);
+    //   var coord = e.latlng;
+    //   var lat = coord.lat;
+    //   var lng = coord.lng;
+    //   console.log(
+    //     "You clicked the map at latitude: " + lat + " and longitude: " + lng
+    //   );
+    // });
 
     fetch("./assets/buildings.json")
       .then(res => res.json())
@@ -58,5 +59,24 @@ export class Tab2Page {
         })
         .openPopup();
     }
+  }
+
+  currentLocation(): void {
+    this.isCurrentLocationShown = true;
+    this.map
+      .locate({ setView: true, maxZoom: 20 })
+      .on("locationfound", (e: any) => {
+        circle(e.latlng, {
+          color: "red",
+          fillColor: "#f03",
+          radius: e.accuracy / 3
+        }).addTo(this.map);
+      });
+  }
+
+  backToCampus(): void {
+    this.isCurrentLocationShown = false;
+    this.map.remove();
+    this.loadMap();
   }
 }
