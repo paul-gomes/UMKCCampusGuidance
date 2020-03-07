@@ -1,12 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0f000263-82a5-4b7d-9e7f-5262e4341ac8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/webResources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="ansh" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1YK0r51WXcUWgWalO6nt7N9e0js" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="ts.external.directory.path" value="C:\Users\Ansh\WebstormProjects\UMKCCampusGuidance\UMKCCampusGuidance\node_modules\typescript\lib" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0f000263-82a5-4b7d-9e7f-5262e4341ac8" name="Default Changelist" comment="" />
+      <created>1583106255452</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1583106255452</updated>
+      <workItem from="1583106256673" duration="1661000" />
+      <workItem from="1583107966599" duration="3533000" />
+    </task>
+    <task id="LOCAL-00001" summary="Auth Done">
+      <created>1583111375451</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1583111375451</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Auth Done" />
+    <option name="LAST_COMMIT_MESSAGE" value="Auth Done" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1899" height="285" key="GridCell.Tab.0.bottom" timestamp="1583107946752">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state width="1899" height="285" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1583107946752" />
+    <state width="1899" height="285" key="GridCell.Tab.0.center" timestamp="1583107946752">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state width="1899" height="285" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1583107946752" />
+    <state width="1899" height="285" key="GridCell.Tab.0.left" timestamp="1583107946752">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state width="1899" height="285" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1583107946752" />
+    <state width="1899" height="285" key="GridCell.Tab.0.right" timestamp="1583107946752">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state width="1899" height="285" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1583107946752" />
+    <state x="672" y="242" key="MultipleFileMergeDialog" timestamp="1583111606691">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="672" y="242" key="MultipleFileMergeDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1583111606691" />
+    <state x="732" y="239" key="git4idea.branch.GitSmartOperationDialog" timestamp="1583111597175">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="732" y="239" key="git4idea.branch.GitSmartOperationDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1583111597175" />
   </component>
 </project>

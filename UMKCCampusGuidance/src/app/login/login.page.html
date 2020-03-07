@@ -1,0 +1,25 @@
+<ion-content>
+    <video #player playsinline autoplay muted loop poster="" id="bgvid">
+        <source src="assets/video/umkc.mp4" type="video/mp4">
+    </video>
+    <div class="login-container">
+        <img class="UMKCLogoCampus" src="assets/img/UMKC_logo.png"  alt="logo"/>
+        <form (ngSubmit)="LogInUMKCCampus($event)">
+            <ion-row>
+                <ion-col>
+                    <ion-list>
+                        <ion-item>
+                            <ion-input name="usrUMKCCampus"  type="text" placeholder="Email" [(ngModel)]="usrUMKCCampus"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                            <ion-input name="passUMKCCampus"  type="Password" placeholder="Password" [(ngModel)]="passUMKCCampus"></ion-input>
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
+            </ion-row>
+            <ion-button fill="solid" expand="block" color="primary" type="submit">Login</ion-button>
+            <p (click)="ResetEmailUMKCCampus()"><strong>Reset your password?</strong></p>
+            <p routerLink="/signup" fill="solid" expand="block" color="medium" style="text-decoration: underline;">Register here</p>
+        </form>
+    </div>
+</ion-content>
