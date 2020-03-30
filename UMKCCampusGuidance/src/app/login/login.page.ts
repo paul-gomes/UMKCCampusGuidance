@@ -43,7 +43,7 @@ export class LoginPage implements OnInit {
     LogInUMKCCampus(e) {
         try {
             this.firebaseUMKCCampus.auth.signInWithEmailAndPassword(this.usrUMKCCampus, this.passUMKCCampus).then(() => {
-                this.routerUMKCCampus.navigate(['/tab1']);
+                this.routerUMKCCampus.navigate(['/tab3']);
                 // tslint:disable-next-line:no-shadowed-variable
             }).catch((e) => {
                 alert(e);
