@@ -1,24 +1,32 @@
-import { Component } from "@angular/core";
-import { Map, tileLayer, marker, icon, circle } from "leaflet";
+import { Component, ViewChild, AfterViewInit } from "@angular/core";
+import { Map, tileLayer, marker, icon, circle, popup } from "leaflet";
 import { IBuilding } from "./buuilding";
+import { Geolocation } from "@ionic-native/geolocation/ngx";
+import {
+  LaunchNavigator,
+  LaunchNavigatorOptions
+} from "@ionic-native/launch-navigator/ngx";
+import { IonButton } from "@ionic/angular";
 
 @Component({
   selector: "app-tab2",
   templateUrl: "tab2.page.html",
   styleUrls: ["tab2.page.scss"]
 })
-export class Tab2Page {
+export class Tab2Page implements AfterViewInit {
   map: Map;
   buildings: [IBuilding];
-  isCurrentLocationShown: boolean = false;
-  constructor() {}
+  startBtn: any;
+  //@ViewChild("myHref") myMap;
+
+  constructor(private launchNavigator: LaunchNavigator) {}
 
   ionViewDidEnter() {
     this.loadMap();
   }
 
   loadMap(): void {
-    this.map = new Map("map").setView([39.034924, -94.578561], 25);
+    this.map = new Map("map").setView([39.034924, -94.578561], 50);
     tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "UMKC Campus Guidance"
     }).addTo(this.map); // This line is added to add the Tile Layer to our map
@@ -48,35 +56,25 @@ export class Tab2Page {
     });
 
     for (const building of this.buildings) {
-      let popUpMsg = `<h5>${building.name}</h5><ion-button size="small">
-      <ion-icon slot="icon-only" name="navigate-circle"></ion-icon>
-    </ion-button>`;
+      let popUpMsg = `${building.name}`;
       marker([building.lat, building.long], { icon: buildingIcon })
         .addTo(this.map)
         .bindPopup(`${popUpMsg}`, {
           closeOnClick: false,
           autoClose: false
         })
+        .on("click", () => this.getDirection(building.lat, building.long))
         .openPopup();
     }
   }
 
-  currentLocation(): void {
-    this.isCurrentLocationShown = true;
-    this.map
-      .locate({ setView: true, maxZoom: 20 })
-      .on("locationfound", (e: any) => {
-        circle(e.latlng, {
-          color: "red",
-          fillColor: "#f03",
-          radius: e.accuracy / 3
-        }).addTo(this.map);
-      });
+  getDirection(lat, long): void {
+    this.launchNavigator.navigate([lat, long]);
   }
 
-  backToCampus(): void {
-    this.isCurrentLocationShown = false;
-    this.map.remove();
-    this.loadMap();
+  ngAfterViewInit() {
+    var input = document.getElementById("myHref");
+    console.log(input);
+    //input.addEventListener("click", (e: Event) => console.log("got it"));
   }
 }
