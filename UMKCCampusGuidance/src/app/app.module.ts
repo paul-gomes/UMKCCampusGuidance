@@ -13,6 +13,8 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireModule } from "@angular/fire";
+import { Geolocation } from "@ionic-native/geolocation/ngx";
+import { LaunchNavigator } from "@ionic-native/launch-navigator/ngx";
 
 const UMKCCampusFireBase = {
   apiKey: "AIzaSyAhF2kSBAYoA4HRMA4Tkw60FuMGC6fABEI",
@@ -40,6 +42,8 @@ const UMKCCampusFireBase = {
     AngularFireModule.initializeApp(UMKCCampusFireBase)
   ],
   providers: [
+    Geolocation,
+    LaunchNavigator,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
