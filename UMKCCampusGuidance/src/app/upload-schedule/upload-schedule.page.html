@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Add Schedule</ion-title>
+    <ion-title>Add Syllabus</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -8,15 +8,21 @@
   <div class="container">
     <div class="error-msg" *ngIf="message !== ''">{{message}}</div>
 
-    <div>Add a picture of your schedule</div>
+    <div>Add a picture of your syllabus</div>
 
     <div class="btn-container">
-      <ion-button (click)="takePicture()">Take Picture</ion-button>
+      <ion-button (click)="selectSource()">Pick Image</ion-button>
+    </div>
 
-<!--      <ion-button (click)="chooseImage()">Upload from Library</ion-button>-->
+    <img class="selected-image" [src]="selectedImage" *ngIf="selectedImage">
+
+    <div class="btn-container">
+      <ion-button (click)="useImage()" *ngIf="selectedImage">
+        Use Image
+      </ion-button>
     </div>
 
     {{text}}
-
   </div>
 </ion-content>
+
