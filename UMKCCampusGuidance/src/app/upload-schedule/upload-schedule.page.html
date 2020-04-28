@@ -6,20 +6,28 @@
 
 <ion-content>
   <div class="container">
-    <div class="error-msg" *ngIf="message !== ''">{{message}}</div>
+    <div *ngIf="!selectedImage" class="select-image">
+      <div class="error-msg" *ngIf="message !== ''">{{message}}</div>
 
-    <div>Add a picture of your syllabus</div>
+      <div class="text">Add a picture of your syllabus</div>
 
-    <div class="btn-container">
-      <ion-button (click)="selectSource()">Pick Image</ion-button>
+      <div class="btn-container">
+        <ion-button (click)="selectSource()">Select Image</ion-button>
+      </div>
     </div>
 
-    <img class="selected-image" [src]="selectedImage" *ngIf="selectedImage">
+    <div *ngIf="selectedImage">
+      <img class="selected-image" [src]="selectedImage">
 
-    <div class="btn-container">
-      <ion-button (click)="useImage()" *ngIf="selectedImage">
-        Use Image
-      </ion-button>
+      <div class="btn-container">
+        <ion-button (click)="useImage()">
+          Use Image
+        </ion-button>
+
+        <ion-button (click)="selectSource()">
+          Select New Image
+        </ion-button>
+      </div>
     </div>
 
     {{text}}
