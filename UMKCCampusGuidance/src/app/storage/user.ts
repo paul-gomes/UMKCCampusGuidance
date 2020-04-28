@@ -2,10 +2,18 @@ import { Schedule } from './schedule';
 
 export class User {
     private username: string;
-    readonly schedule: Schedule;
+    private schedule: Schedule;
 
-    constructor() {
-        this.username = 'tanisimova';
-        this.schedule = new Schedule();
+    constructor(username, schedule) {
+        this.username = username;
+        this.schedule = schedule;
+    }
+
+    setSchedule(schedule) {
+        this.schedule = schedule;
+    }
+
+    getSchedule() {
+        return this.schedule;
     }
 }

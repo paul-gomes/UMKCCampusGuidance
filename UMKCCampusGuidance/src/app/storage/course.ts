@@ -1,19 +1,20 @@
 import { Topic } from './topic';
+import {Time} from '@angular/common';
 
 export class Course {
     private name: string;
-    private courseNumber: string;
     private location: Location;
     private days: string;
-    private time: string;
+    private startTime: Time;
+    private endTime: Time;
     private syllabus: Topic[];
 
-    constructor(name, courseNumber, location, days, time, syllabus) {
+    constructor(name, location, days, startTime, endTime, syllabus) {
         this.name = name;
-        this.courseNumber = courseNumber;
         this.location = location;
         this.days = days;
-        this.time = time;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.syllabus = syllabus;
     }
 }
