@@ -65,12 +65,14 @@ export class UploadSchedulePage implements OnInit {
   }
 
   useImage() {
-    this.storageService = new StorageService();
-    this.storageService.init('tanya');
     // this.ocr.recText(OCRSourceType.NORMFILEURL, this.imageData).then((result: OCRResult) => {
     //   this.text = result;
     // }).catch((error) => {
     //   console.log(error);
     // });
+
+    this.storageService = new StorageService();
+    this.storageService.init('tanya');
+    this.storageService.addSyllabus(0);
   }
 }

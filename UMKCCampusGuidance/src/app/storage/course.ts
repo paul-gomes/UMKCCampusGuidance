@@ -17,4 +17,8 @@ export class Course {
         this.endTime = endTime;
         this.syllabus = syllabus;
     }
+
+    setSyllabus(syllabus: Topic[]) {
+        this.syllabus = syllabus;
+    }
 }

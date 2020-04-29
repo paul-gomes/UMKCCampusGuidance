@@ -3,6 +3,7 @@ import { User } from './user';
 import { Schedule } from './schedule';
 import { Course } from './course';
 import { Location } from './location';
+import { Topic } from './topic';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,6 @@ export class StorageService {
 
   constructor() {
     // this.createUser(username);
-
     // read from firebase if exists
   }
 
@@ -31,7 +31,8 @@ export class StorageService {
 
   addSchedule(scheduleText) {
     const courseNameList = [];
-    let words = scheduleText.replace(new RegExp('\n', 'g'), '').split(' '); // RegEx so all are replaced not just the first
+    // RegEx so all are replaced not just the first
+    let words = scheduleText.replace(new RegExp('\n', 'g'), '').split(' ');
     words.forEach((word, index) => {
       if (word.includes('(') && word.includes('(')) {
         courseNameList.push('' + words[index - 3] + ' ' +  words[index - 2] + ' ' + words[index - 1]);
@@ -49,13 +50,21 @@ export class StorageService {
           building += ' ' + words[index + 3].replace('-Rm', '');
         }
         const location = new Location(building , words[index + 4]);
-        courseList.push( new Course(courseNameList[courseIndex], location, words[index - 2], words[index - 1], words[index + 1], null));
+        courseList.push(
+            new Course(courseNameList[courseIndex], location, words[index - 2], words[index - 1], words[index + 1], null)
+        );
         courseIndex++;
       }
     });
 
 
     this.user.setSchedule(new Schedule(courseList));
+  }
+
+  addSyllabus(courseIndex) {
+    const courseList = [ new Topic('4/25', 'Bubble Sort'), new Topic('5/1', 'Quick Sort'),
+      new Topic('5/8', 'Merge Sort'), new Topic('5/15', 'Heap Sort')];
+    this.user.setSyllabusForCourse(courseIndex, courseList);
   }
 
   getSchedule() {
@@ -69,7 +78,7 @@ export class StorageService {
     if (!this.user) {
       return null;
     }
-    return this.user.getSchedule().courseList;
+    return this.user.getSchedule().getCourseList();
   }
 
   getUser() {

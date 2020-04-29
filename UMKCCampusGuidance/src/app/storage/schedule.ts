@@ -1,9 +1,17 @@
 import { Course } from './course';
 
 export class Schedule {
-    readonly courseList: Course[];
+    private courseList: Course[];
 
     constructor(courseList) {
         this.courseList = courseList;
+    }
+
+    getCourseList() {
+        return this.courseList;
+    }
+
+    getCourseAtIndex(index) {
+        return this.courseList[index];
     }
 }

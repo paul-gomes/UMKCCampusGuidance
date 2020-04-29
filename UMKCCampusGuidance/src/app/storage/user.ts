@@ -16,4 +16,8 @@ export class User {
     getSchedule() {
         return this.schedule;
     }
+
+    setSyllabusForCourse(courseIndex, syllabus) {
+        this.schedule.getCourseAtIndex(courseIndex).setSyllabus(syllabus);
+    }
 }
