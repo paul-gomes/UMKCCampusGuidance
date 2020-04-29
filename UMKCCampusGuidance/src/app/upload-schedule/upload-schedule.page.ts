@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Camera, CameraOptions } from '@ionic-native/Camera/ngx';
 import { ActionSheetController } from '@ionic/angular';
 import { StorageService } from '../storage/storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upload-schedule',
@@ -16,7 +17,8 @@ export class UploadSchedulePage implements OnInit {
 
   constructor(private camera: Camera,
               private actionSheetController: ActionSheetController,
-              private storageService: StorageService) { }
+              private storageService: StorageService,
+              private router: Router) { }
 
   ngOnInit() {}
 
@@ -67,5 +69,7 @@ export class UploadSchedulePage implements OnInit {
     this.storageService = new StorageService();
     this.storageService.init('tanya');
     this.storageService.addSyllabus(0);
+
+    this.router.navigate(['/tab1']);
   }
 }

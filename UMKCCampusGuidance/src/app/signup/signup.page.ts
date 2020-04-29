@@ -33,7 +33,7 @@ export class SignupPage {
           }).then();
         });
         alert('Registration Done!');
-        this.routerUMKCCampus.navigate(['/login']);
+        this.routerUMKCCampus.navigate(['/upload']);
       }).catch((e) => {
         alert(e);
       });
