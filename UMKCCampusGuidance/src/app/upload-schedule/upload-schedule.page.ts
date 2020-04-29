@@ -3,8 +3,6 @@ import { Camera, CameraOptions } from '@ionic-native/Camera/ngx';
 import { ActionSheetController } from '@ionic/angular';
 import { StorageService } from '../storage/storage.service';
 
-// import { File } from '@ionic-native/file/ngx';
-
 @Component({
   selector: 'app-upload-schedule',
   templateUrl: './upload-schedule.page.html',
@@ -15,11 +13,6 @@ export class UploadSchedulePage implements OnInit {
   message = '';
   selectedImage;
   imageData;
-
-  imagePickerOptions = {
-    maximumImagesCount: 1,
-    quality: 50
-  };
 
   constructor(private camera: Camera,
               private actionSheetController: ActionSheetController,
