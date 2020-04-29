@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {Camera, CameraOptions} from '@ionic-native/Camera/ngx';
-import {OCRResult} from '@ionic-native/ocr';
-import {ActionSheetController} from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { Camera, CameraOptions } from '@ionic-native/Camera/ngx';
+import { ActionSheetController } from '@ionic/angular';
+import { StorageService } from '../storage/storage.service';
 
 // import { File } from '@ionic-native/file/ngx';
 
@@ -11,7 +11,7 @@ import {ActionSheetController} from '@ionic/angular';
   styleUrls: ['./upload-schedule.page.scss'],
 })
 export class UploadSchedulePage implements OnInit {
-  text: OCRResult;
+  // text: OCRResult;
   message = '';
   selectedImage;
   imageData;
@@ -22,9 +22,10 @@ export class UploadSchedulePage implements OnInit {
   };
 
   constructor(private camera: Camera,
-              private actionSheetController: ActionSheetController) { }
+              private actionSheetController: ActionSheetController,
+              private storageService: StorageService) { }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   selectSource() {
     this.actionSheetController.create({
@@ -64,6 +65,8 @@ export class UploadSchedulePage implements OnInit {
   }
 
   useImage() {
+    this.storageService = new StorageService();
+    this.storageService.init('tanya');
     // this.ocr.recText(OCRSourceType.NORMFILEURL, this.imageData).then((result: OCRResult) => {
     //   this.text = result;
     // }).catch((error) => {
