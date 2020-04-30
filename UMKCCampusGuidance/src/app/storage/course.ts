@@ -4,7 +4,8 @@ import { Time } from '@angular/common';
 export interface Course {
     id: string;
     name: string;
-    location: Location;
+    building: string;
+    roomNumber: number;
     days: string;
     startTime: string; // Time
     endTime: string; // Time;
