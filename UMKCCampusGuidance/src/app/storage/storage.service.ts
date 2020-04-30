@@ -160,51 +160,30 @@ export class StorageService {
       return buildings;
   }
 
-  // wrapper
-  compareArrays(dateArray, dateArray2) {
-    if (dateArray2 === undefined) {
-      return false;
-    }
-    return this.compareDates(dateArray.month, dateArray.day, dateArray2.month, dateArray2.day);
-  }
-
-  // wrapper
-  compare(dateArray, date) {
-    return this.compareDates(dateArray.month, dateArray.day, date.getMonth(), date.getUTCDay());
-  }
-
-  // returns true if date1 >= date2; returns false if date1 < date2
-  compareDates(month1, day1, month2, day2) {
-    if (month1 > month2) {
-        return true;
-    } else if (month1 < month2) {
-        return false;
-    } else { // months are equal
-        if (day1 >= day2) {
-            return true;
-        }
-        return false;
-    }
-  }
-
+  // returns the most recent upcoming topic
   getTopic() {
       this.addSyllabus(0);
 
       let selTopic = '';
       let selDate;
-      const currentDate = new Date(); // new Date().format('m-d-Y');
+      const currentDate = new Date();
       this.user.schedule.courseList.forEach(course => {
           if (course.syllabus !== undefined && course.syllabus !== null) {
               course.syllabus.forEach(topic => {
                   const dateStrArray = topic.date.split('/');
                   // tslint:disable-next-line:radix
-                  const dateArray = { month: parseInt(dateStrArray[0]), day: parseInt(dateStrArray[1]) };
-                  console.log(this.compare(dateArray, currentDate));
-                  console.log(this.compareArrays(dateArray, selDate));
-                  if (this.compare(dateArray, currentDate) && !this.compareArrays(dateArray, selDate)) {
+                  const topicDate = new Date(currentDate.getUTCFullYear(), parseInt(dateStrArray[0]) - 1, parseInt(dateStrArray[1]));
+                  console.log(topicDate >= currentDate);
+                  console.log(topicDate < selDate);
+                  if (selTopic === '') {
                       selTopic = topic.topic;
-                      // tslint:disable-next-line:radix
-                      selDate = dateArray;
+                      selDate = topicDate;
+                  } else if (selDate < currentDate && topicDate > selDate) {
+                      selTopic = topic.topic;
+                      selDate = topicDate;
+                  } else if (topicDate >= currentDate && topicDate < selDate) {
+                      selTopic = topic.topic;
+                      selDate = topicDate;
                   }
               });
           }
