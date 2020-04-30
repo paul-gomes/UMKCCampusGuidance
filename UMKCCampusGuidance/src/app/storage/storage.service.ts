@@ -12,7 +12,6 @@ import { map } from 'rxjs/operators';
 })
 
 export class StorageService {
-  private static SCHEDULE_COLLECTION = 'umkccampusguidance/schedules';
   private user: User;
   private scheduleCollection;
 
@@ -53,45 +52,91 @@ export class StorageService {
     // const n = this.firestore.collection('/schedules').doc('tanya').get();
 
 
-    this.user = new User(username, null);
-    this.getUserId(username);
-    if (this.user.getId() === null) {
-      this.scheduleCollection.add({
-        username
-      }).then(
-          (res) => {
-            console.log(res);
-            console.log('added user' + username);
-          },
-          err => console.log(err)
-      );
-    }
+    this.user = new User('u3Edl5IgLLfJmC8ncj6E', username, new Schedule([]));
 
-    if (this.user.getSchedule() == null) {
-      // tslint:disable-next-line:max-line-length
-      const scheduleText = 'COMP-SCI 5540-0001 LEC (14110) \nCOMP-SCI 5551-0001 LEC (11505) \nCOMP-SCI 5552A-0001 LEC (13498) \nCOMP-SCI 5592-0001 LEC (14041) \nTuTh 1:00PM - 2:15PM Royall Hall-Rm 00111 TuTh 5:30PM - 6:45PM Flarsheim Hall-Rm 00460 MoWeFr 3:00PM - 3:50PM Haag Hall-Rm 00109 TuTh 10:00AM - 11:15AM Bloch -Rm 00002 ';
-      this.addSchedule(scheduleText);
-    }
+    this.retrieveCourses().then(response => {
+      if (response) {
+        console.log('t');
+      } else {
+        console.log('false');
+      }
+    });
+    // retrieving from firebase is async
+    // this.retrieveUser(username).then(() => {
+    //   console.log('yes')
+    //   if (this.user.getId() === null) {
+    //     this.scheduleCollection.add({
+    //       username
+    //     }).then(
+    //         (res) => {
+    //           this.user.setId(res.id);
+    //           console.log('added user: ' + username + '; id: ' + this.user.getId());
+    //         },
+    //         err => console.log(err)
+    //     );
+    //   } else {
+    //     // existing user, so check for schedule in firestore
+    //
+    //     if (this.user.getSchedule() == null) {
+    //       // tslint:disable-next-line:max-line-length
+    //       const scheduleText = 'COMP-SCI 5540-0001 LEC (14110) \nCOMP-SCI 5551-0001 LEC (11505) \nCOMP-SCI 5552A-0001 LEC (13498) \nCOMP-SCI 5592-0001 LEC (14041) \nTuTh 1:00PM - 2:15PM Royall Hall-Rm 00111 TuTh 5:30PM - 6:45PM Flarsheim Hall-Rm 00460 MoWeFr 3:00PM - 3:50PM Haag Hall-Rm 00109 TuTh 10:00AM - 11:15AM Bloch -Rm 00002 ';
+    //       this.addSchedule(scheduleText);
+    //     }
+    //   }
+    // });
   }
 
-  getUserId(username) {
+  retrieveUser(username): Promise<boolean> {
     const userRef = this.firestore.collection('schedules', ref => {
       return ref.where('username', '==', username).limit(10);
     });
 
-    // const userColl =
-    userRef.snapshotChanges().pipe(
+    const userColl = userRef.snapshotChanges().pipe(
         map(actions => actions.map(a => {
-          console.log(a.payload.doc.id)
+          console.log(a.payload.doc.id);
           this.user.setId(a.payload.doc.id);
-          // read schedule
-          // return a.payload.doc.data();
+          const data = a.payload.doc.data();
+          console.log(data['username']);
+          return a.payload.doc.data();
         }))
     );
 
-    // userColl.forEach(doc => {
-    //   console.log(doc);
-    // });
+    // wait for query to continue execution, because firebase calls are async
+    return userColl.forEach((doc) => {
+      console.log(doc);
+      return true;
+    }).then(resp => {
+      console.log(resp);
+      return true;
+    },
+    err => {
+      console.log(err);
+      return true;
+    });
+  }
+
+  retrieveCourses(): Promise<boolean> {
+    const courseRef = this.firestore.collection('/schedules').doc(this.user.getId()).collection('courses', ref => {
+      return ref;
+    });
+
+    const courseColl = courseRef.snapshotChanges().pipe(
+        map(actions => actions.map(a => {
+          console.log(a.payload.doc.id);
+          const data = a.payload.doc.data();
+          let syllabus = null;
+          if (data['syllabus'] !== 'null') {
+            syllabus = JSON.parse(data['syllabus']);
+          }
+          console.log(syllabus);
+
+          this.user.addCourse({id: a.payload.doc.id, name: data['name'], location: data['location'],
+            days: data['days'], startTime: data['startTime'], endTime: data['endTime'], syllabus});
+          return data;
+        }))
+    );
+
+    return courseColl.forEach(() => {}).then(() => true);
   }
 
   addSchedule(scheduleText) {
@@ -114,20 +159,28 @@ export class StorageService {
         if (words[index + 3].replace('-Rm', '') !== '') {
           building += ' ' + words[index + 3].replace('-Rm', '');
         }
-        const location = new Location(building , words[index + 4]);
+        const location = {building , roomNumber: words[index + 4]};
         courseList.push(
-            new Course(courseNameList[courseIndex], location, words[index - 2], words[index - 1], words[index + 1], null)
-        );
+            { id: null, name: courseNameList[courseIndex], location, days: words[index - 2], startTime: words[index - 1],
+              endTime: words[index + 1], syllabus: null });
         courseIndex++;
       }
     });
 
     this.user.setSchedule(new Schedule(courseList));
-    this.storeUserInFirebase();
-  }
+    this.addSyllabus(0);
 
-  storeUserInFirebase() {
-
+    this.user.getSchedule().getCourseList().forEach((course, index) => {
+      const courseObj = { name: course.name, location: JSON.stringify(course.location), days: course.days, startTime: course.startTime,
+          endTime: course.endTime, syllabus: JSON.stringify(course.syllabus)};
+      this.scheduleCollection.doc(this.user.getId()).collection('courses').add(courseObj).then(
+          (res) => {
+            this.user.getSchedule().getCourseList()[index].id = res.id;
+            console.log('added course id: ' + res.id);
+          },
+          err => console.log(err)
+      );
+    });
   }
 
   storeSyllabusInFirebase() {
@@ -139,10 +192,11 @@ export class StorageService {
   }
 
   addSyllabus(courseIndex) {
-    const courseList = [ new Topic('4/25', 'Bubble Sort'), new Topic('5/1', 'Quick Sort'),
-      new Topic('5/8', 'Merge Sort'), new Topic('5/15', 'Heap Sort')];
+    const courseList = [{ date: '4/28', topic: 'Bubble Sort' }, { date: '5/1', topic: 'Quick Sort'},
+      { date: '5/8', topic: 'Merge Sort' }, { date: '5/15', topic: 'Heap Sort' }];
     this.user.setSyllabusForCourse(courseIndex, courseList);
-    this.storeSyllabusInFirebase();
+    console.log(JSON.stringify(courseList));
+    console.log(JSON.parse(JSON.stringify(courseList)));
   }
 
   getSchedule() {

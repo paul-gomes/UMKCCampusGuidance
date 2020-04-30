@@ -5,8 +5,8 @@ export class User {
     private username: string;
     private schedule: Schedule;
 
-    constructor(username, schedule) {
-        this.id = null;
+    constructor(id, username, schedule) {
+        this.id = id;
         this.username = username;
         this.schedule = schedule;
     }
@@ -32,6 +32,10 @@ export class User {
     }
 
     setSyllabusForCourse(courseIndex, syllabus) {
-        this.schedule.getCourseAtIndex(courseIndex).setSyllabus(syllabus);
+        this.schedule.getCourseAtIndex(courseIndex).syllabus = syllabus;
+    }
+
+    addCourse(course) {
+        this.schedule.getCourseList().push(course);
     }
 }
