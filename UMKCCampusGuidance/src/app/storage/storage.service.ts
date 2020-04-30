@@ -21,74 +21,18 @@ export class StorageService {
     this.scheduleCollection = this.firestore.collection('/schedules');
   }
 
-  createUser(username: string) {
-    // const userDoc =  this.scheduleCollection.doc('tanya').collection('/courses');
-    //
-    // this.scheduleCollection.doc('tanya').update({
-    //   schedule: 'd'
-    // }).then(
-    //     (res) => {
-    //       console.log('updated');
-    //     },
-    //     err => console.log(err)
-    // );
-    //
-    // const scheduleRef = this.firestore.collection('/schedules', ref => {
-    //   return ref;
-    // });
-    //
-    // const questionsCol = scheduleRef.snapshotChanges().pipe(
-    //     map(actions => actions.map(a => {
-    //       return a.payload.doc.data(); // get id using a.payload.doc.id
-    //     }))
-    // );
-    //
-    // questionsCol.forEach(doc => {
-    //   console.log(doc);
-    // });
-    //
-    // const fd = this.firestore.firestore.collection('/schedules').get();
-    //
-    // const n = this.firestore.collection('/schedules').doc('tanya').get();
-
-
-    this.user = new User('u3Edl5IgLLfJmC8ncj6E', username, new Schedule([]));
-
-    this.retrieveCourses().then(response => {
-      if (response) {
-        console.log('t');
-      } else {
-        console.log('false');
+  loadUser(username: string, callback) {
+    if (this.user !== undefined && this.user !== null) {
+      if (this.user.getUsername() === username) {
+        callback();
+        return;
       }
-    });
-    // retrieving from firebase is async
-    // this.retrieveUser(username).then(() => {
-    //   console.log('yes')
-    //   if (this.user.getId() === null) {
-    //     this.scheduleCollection.add({
-    //       username
-    //     }).then(
-    //         (res) => {
-    //           this.user.setId(res.id);
-    //           console.log('added user: ' + username + '; id: ' + this.user.getId());
-    //         },
-    //         err => console.log(err)
-    //     );
-    //   } else {
-    //     // existing user, so check for schedule in firestore
-    //
-    //     if (this.user.getSchedule() == null) {
-    //       // tslint:disable-next-line:max-line-length
-    //       const scheduleText = 'COMP-SCI 5540-0001 LEC (14110) \nCOMP-SCI 5551-0001 LEC (11505) \nCOMP-SCI 5552A-0001 LEC (13498) \nCOMP-SCI 5592-0001 LEC (14041) \nTuTh 1:00PM - 2:15PM Royall Hall-Rm 00111 TuTh 5:30PM - 6:45PM Flarsheim Hall-Rm 00460 MoWeFr 3:00PM - 3:50PM Haag Hall-Rm 00109 TuTh 10:00AM - 11:15AM Bloch -Rm 00002 ';
-    //       this.addSchedule(scheduleText);
-    //     }
-    //   }
-    // });
-  }
+    }
 
-  retrieveUser(username): Promise<boolean> {
+    this.user = new User(null, username, new Schedule([]));
+
     const userRef = this.firestore.collection('schedules', ref => {
-      return ref.where('username', '==', username).limit(10);
+      return ref.where('username', '==', username).limit(1);
     });
 
     const userColl = userRef.snapshotChanges().pipe(
@@ -101,45 +45,47 @@ export class StorageService {
         }))
     );
 
-    // wait for query to continue execution, because firebase calls are async
-    return userColl.forEach((doc) => {
-      console.log(doc);
-      return true;
-    }).then(resp => {
-      console.log(resp);
-      return true;
-    },
-    err => {
-      console.log(err);
-      return true;
+    // calls to firestore are async so have to be nested
+    userColl.forEach(doc => {
+      if (doc.length === 0) { // user does not exist, so create user
+        this.scheduleCollection.add({
+          username
+        }).then(
+            (res) => {
+              this.user.setId(res.id);
+              console.log('added user: ' + username + '; id: ' + this.user.getId());
+              callback();
+            },
+            err => console.log(err)
+        );
+
+      } else { // existing user, check for courses
+        const courseRef = this.firestore.collection('/schedules').doc(this.user.getId()).collection('courses', ref => {
+          return ref;
+        });
+
+        const courseColl = courseRef.snapshotChanges().pipe(
+            map(actions => actions.map(a => {
+              const data = a.payload.doc.data();
+              let syllabus = null;
+              if (data['syllabus'] !== 'null') {
+                syllabus = JSON.parse(data['syllabus']);
+              }
+
+              this.user.addCourse({id: a.payload.doc.id, name: data['name'], location: data['location'],
+                days: data['days'], startTime: data['startTime'], endTime: data['endTime'], syllabus});
+              return data;
+            }))
+        );
+
+        courseColl.forEach(() => {
+          callback();
+        });
+      }
     });
   }
 
-  retrieveCourses(): Promise<boolean> {
-    const courseRef = this.firestore.collection('/schedules').doc(this.user.getId()).collection('courses', ref => {
-      return ref;
-    });
-
-    const courseColl = courseRef.snapshotChanges().pipe(
-        map(actions => actions.map(a => {
-          console.log(a.payload.doc.id);
-          const data = a.payload.doc.data();
-          let syllabus = null;
-          if (data['syllabus'] !== 'null') {
-            syllabus = JSON.parse(data['syllabus']);
-          }
-          console.log(syllabus);
-
-          this.user.addCourse({id: a.payload.doc.id, name: data['name'], location: data['location'],
-            days: data['days'], startTime: data['startTime'], endTime: data['endTime'], syllabus});
-          return data;
-        }))
-    );
-
-    return courseColl.forEach(() => {}).then(() => true);
-  }
-
-  addSchedule(scheduleText) {
+  addSchedule(scheduleText, callback) {
     const courseNameList = [];
     // RegEx so all are replaced not just the first
     let words = scheduleText.replace(new RegExp('\n', 'g'), '').split(' ');
@@ -179,16 +125,8 @@ export class StorageService {
             console.log('added course id: ' + res.id);
           },
           err => console.log(err)
-      );
+      ).then(() => callback());
     });
-  }
-
-  storeSyllabusInFirebase() {
-
-  }
-
-  getUserFromFirebase(useranme) {
-    return false;
   }
 
   addSyllabus(courseIndex) {
@@ -197,13 +135,6 @@ export class StorageService {
     this.user.setSyllabusForCourse(courseIndex, courseList);
     console.log(JSON.stringify(courseList));
     console.log(JSON.parse(JSON.stringify(courseList)));
-  }
-
-  getSchedule() {
-    if (!this.user) {
-      return null;
-    }
-    return this.user.getSchedule();
   }
 
   getCourseList() {
