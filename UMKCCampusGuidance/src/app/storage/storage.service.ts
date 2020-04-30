@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import { User } from './user';
-import { Schedule } from './schedule';
-import { Course } from './course';
-import { Location } from './location';
-import { Topic } from './topic';
+import {Injectable} from '@angular/core';
+import {User} from './user';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {map} from 'rxjs/operators';
+import {Topic} from './topic';
 
 @Injectable({
   providedIn: 'root'
@@ -11,25 +10,84 @@ import { Topic } from './topic';
 
 export class StorageService {
   private user: User;
+  private scheduleCollection;
 
-  constructor() {
+  constructor(private firestore: AngularFirestore) {
     // this.createUser(username);
     // read from firebase if exists
+    this.scheduleCollection = this.firestore.collection('/schedules');
   }
 
-  init(username: string) {
-    this.createUser(username);
+  loadUser(username: string, callback) {
+    if (this.user !== undefined && this.user !== null) {
+      if (this.user.username === username) {
+        callback();
+        return;
+      }
+    }
+
+    this.user = {id: null, username, schedule: {courseList: []}};
+
+    const userRef = this.firestore.collection('schedules', ref => {
+      return ref.where('username', '==', username).limit(1);
+    });
+
+    const userColl = userRef.snapshotChanges().pipe(
+        map(actions => actions.map(a => {
+          console.log(a.payload.doc.id);
+          this.user.id = a.payload.doc.id;
+          const data = a.payload.doc.data();
+          console.log(data['username']);
+          return a.payload.doc.data();
+        }))
+    );
+
+    // calls to firestore are async so have to be nested
+    userColl.forEach(doc => {
+      if (doc.length === 0) { // user does not exist, so create user
+        this.scheduleCollection.add({
+          username
+        }).then(
+            (res) => {
+              this.user.id = res.id;
+              console.log('added user: ' + username + '; id: ' + this.user.id);
+              callback();
+            },
+            err => console.log(err)
+        );
+
+      } else { // existing user, check for courses
+        const courseRef = this.firestore.collection('/schedules').doc(this.user.id).collection('courses', ref => {
+          return ref;
+        });
+
+        const courseColl = courseRef.snapshotChanges().pipe(
+            map(actions => actions.map(a => {
+              const data = a.payload.doc.data();
+              let syllabus: Topic[] = null;
+              if (data.syllabus !== 'null') {
+                syllabus = JSON.parse(data.syllabus);
+
+                // syllabus.forEach(topic => {
+                //     const dateArray = topic.date
+                //       topic.date = topic.date
+                //   })
+              }
+
+              this.user.schedule.courseList.push({id: a.payload.doc.id, name: data.name, building: data.building,
+                  roomNumber: data.roomNumber, days: data.days, startTime: data.startTime, endTime: data.endTime, syllabus});
+              return data;
+            }))
+        );
+
+        courseColl.forEach(() => {
+          callback();
+        });
+      }
+    });
   }
 
-  createUser(username) {
-    this.user = new User(username, null);
-
-    // tslint:disable-next-line:max-line-length
-    const scheduleText = 'COMP-SCI 5540-0001 LEC (14110) \nCOMP-SCI 5551-0001 LEC (11505) \nCOMP-SCI 5552A-0001 LEC (13498) \nCOMP-SCI 5592-0001 LEC (14041) \nTuTh 1:00PM - 2:15PM Royall Hall-Rm 00111 TuTh 5:30PM - 6:45PM Flarsheim Hall-Rm 00460 MoWeFr 3:00PM - 3:50PM Haag Hall-Rm 00109 TuTh 10:00AM - 11:15AM Bloch -Rm 00002 ';
-    this.addSchedule(scheduleText);
-  }
-
-  addSchedule(scheduleText) {
+  addSchedule(scheduleText, callback) {
     const courseNameList = [];
     // RegEx so all are replaced not just the first
     let words = scheduleText.replace(new RegExp('\n', 'g'), '').split(' ');
@@ -40,7 +98,6 @@ export class StorageService {
     });
 
     let courseIndex = 0;
-    const courseList = [];
     const lines = scheduleText.split('\n');
     words = lines[lines.length - 1].split(' ');
     words.forEach((word, index) => {
@@ -49,39 +106,88 @@ export class StorageService {
         if (words[index + 3].replace('-Rm', '') !== '') {
           building += ' ' + words[index + 3].replace('-Rm', '');
         }
-        const location = new Location(building , words[index + 4]);
-        courseList.push(
-            new Course(courseNameList[courseIndex], location, words[index - 2], words[index - 1], words[index + 1], null)
-        );
+        this.user.schedule.courseList.push(
+            { id: null, name: courseNameList[courseIndex], building, roomNumber: words[index + 4], days: words[index - 2],
+                startTime: words[index - 1], endTime: words[index + 1], syllabus: null });
         courseIndex++;
       }
     });
 
+    this.addSyllabus(0);
 
-    this.user.setSchedule(new Schedule(courseList));
+    this.user.schedule.courseList.forEach((course, index) => {
+      const courseObj = { name: course.name, building: course.building, roomNumber: course.roomNumber, days: course.days,
+          startTime: course.startTime, endTime: course.endTime, syllabus: JSON.stringify(course.syllabus)};
+      this.scheduleCollection.doc(this.user.id).collection('courses').add(courseObj).then(
+          (res) => {
+            this.user.schedule.courseList[index].id = res.id;
+            console.log('added course id: ' + res.id);
+          },
+          err => console.log(err)
+      ).then(() => callback());
+    });
   }
 
   addSyllabus(courseIndex) {
-    const courseList = [ new Topic('4/25', 'Bubble Sort'), new Topic('5/1', 'Quick Sort'),
-      new Topic('5/8', 'Merge Sort'), new Topic('5/15', 'Heap Sort')];
-    this.user.setSyllabusForCourse(courseIndex, courseList);
-  }
+      this.user.schedule.courseList[courseIndex].syllabus = [
+          {date: '4/29', topic: 'Bubble Sort'},
+          {date: '5/3', topic: 'Quick Sort'},
+          {date: '5/9', topic: 'Merge Sort'},
+          {date: '5/15', topic: 'Heap Sort'}];
 
-  getSchedule() {
-    if (!this.user) {
-      return null;
-    }
-    return this.user.getSchedule();
+    // TODO: add to firestore
   }
 
   getCourseList() {
     if (!this.user) {
       return null;
     }
-    return this.user.getSchedule().getCourseList();
+    return this.user.schedule.courseList;
   }
 
   getUser() {
     return this.user;
+  }
+
+  getBuildings() {
+      const buildings = [];
+      if (!this.user) {
+          return buildings;
+      }
+      this.user.schedule.courseList.forEach(course => {
+          buildings.push({courseName: course.name, building: course.building, room: course.roomNumber});
+      });
+      return buildings;
+  }
+
+  // returns the most recent upcoming topic
+  getTopic() {
+      this.addSyllabus(0);
+
+      let selTopic = '';
+      let selDate;
+      const currentDate = new Date();
+      this.user.schedule.courseList.forEach(course => {
+          if (course.syllabus !== undefined && course.syllabus !== null) {
+              course.syllabus.forEach(topic => {
+                  const dateStrArray = topic.date.split('/');
+                  // tslint:disable-next-line:radix
+                  const topicDate = new Date(currentDate.getUTCFullYear(), parseInt(dateStrArray[0]) - 1, parseInt(dateStrArray[1]));
+                  console.log(topicDate >= currentDate);
+                  console.log(topicDate < selDate);
+                  if (selTopic === '') {
+                      selTopic = topic.topic;
+                      selDate = topicDate;
+                  } else if (selDate < currentDate && topicDate > selDate) {
+                      selTopic = topic.topic;
+                      selDate = topicDate;
+                  } else if (topicDate >= currentDate && topicDate < selDate) {
+                      selTopic = topic.topic;
+                      selDate = topicDate;
+                  }
+              });
+          }
+      });
+      return selTopic;
   }
 }

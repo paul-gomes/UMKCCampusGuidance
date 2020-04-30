@@ -10,11 +10,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFireDatabaseModule} from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire';
 
 import { Camera } from '@ionic-native/Camera/ngx';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
 
 const UMKCCampusFireBase = {
   apiKey: 'AIzaSyAhF2kSBAYoA4HRMA4Tkw60FuMGC6fABEI',
@@ -39,6 +40,7 @@ const UMKCCampusFireBase = {
     ReactiveFormsModule,
     AngularFireDatabaseModule,
     AngularFireAuthModule,
+    AngularFirestoreModule,
     AngularFireModule.initializeApp(UMKCCampusFireBase)
   ],
   providers: [

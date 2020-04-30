@@ -5,11 +5,11 @@ import { StorageService } from '../storage/storage.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-upload-schedule',
-  templateUrl: './upload-schedule.page.html',
-  styleUrls: ['./upload-schedule.page.scss'],
+  selector: 'app-upload-syllabus',
+  templateUrl: './upload-syllabus.page.html',
+  styleUrls: ['./upload-syllabus.page.scss'],
 })
-export class UploadSchedulePage implements OnInit {
+export class UploadSyllabusPage implements OnInit {
   // text: OCRResult;
   message = '';
   selectedImage;
@@ -66,29 +66,33 @@ export class UploadSchedulePage implements OnInit {
     //   console.log(error);
     // });
 
-    // DEBUG
-    // this.storageService.loadUser('test', () => {
-    //   if (this.storageService.getCourseList().length === 0) {
-    //     // tslint:disable-next-line:max-line-length
-    //     const scheduleText = 'COMP-SCI 5540-0001 LEC (14110) \nCOMP-SCI 5551-0001 LEC (11505) \nCOMP-SCI 5552A-0001 LEC (13498) \nCOMP-SCI 5592-0001 LEC (14041) \nTuTh 1:00PM - 2:15PM Royall Hall-Rm 00111 TuTh 5:30PM - 6:45PM Flarsheim Hall-Rm 00460 MoWeFr 3:00PM - 3:50PM Haag Hall-Rm 00109 TuTh 10:00AM - 11:15AM Bloch -Rm 00002 ';
-    //
-    //     this.storageService.addSchedule(scheduleText, () => {
-    //       this.router.navigate(['/tab1']);
-    //     });
-    //   } else {
-    //     this.router.navigate(['/tab1']);
-    //   }
-    // });
-
-    if (this.storageService.getCourseList().length === 0) {
-      // tslint:disable-next-line:max-line-length
-      const scheduleText = 'COMP-SCI 5540-0001 LEC (14110) \nCOMP-SCI 5551-0001 LEC (11505) \nCOMP-SCI 5552A-0001 LEC (13498) \nCOMP-SCI 5592-0001 LEC (14041) \nTuTh 1:00PM - 2:15PM Royall Hall-Rm 00111 TuTh 5:30PM - 6:45PM Flarsheim Hall-Rm 00460 MoWeFr 3:00PM - 3:50PM Haag Hall-Rm 00109 TuTh 10:00AM - 11:15AM Bloch -Rm 00002 ';
-
-      this.storageService.addSchedule(scheduleText, () => {
-        this.router.navigate(['/tab1']);
+    const buttons = [];
+    this.storageService.getCourseList().forEach((course, index) => {
+      buttons.push({
+        text: course.name,
+        handler: () => {
+          this.selectCourse(index);
+        }
       });
-    } else {
-      this.router.navigate(['/tab1']);
+    });
+
+    buttons.push({
+      text: 'Cancel',
+      role: 'cancel'
+    });
+
+    this.actionSheetController.create({
+      buttons
+    }).then(ac => ac.present());
+  }
+
+  selectCourse(index) {
+    if (this.storageService.getCourseList().length !== 0) {
+      this.storageService.addSyllabus(index);
     }
+  }
+
+  done() {
+    this.router.navigate(['/tab3']);
   }
 }
