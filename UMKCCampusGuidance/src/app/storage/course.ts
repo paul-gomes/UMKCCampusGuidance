@@ -2,6 +2,7 @@ import { Topic } from './topic';
 import {Time} from '@angular/common';
 
 export class Course {
+    private id: string;
     private name: string;
     private location: Location;
     private days: string;

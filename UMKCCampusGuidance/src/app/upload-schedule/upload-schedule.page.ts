@@ -66,10 +66,9 @@ export class UploadSchedulePage implements OnInit {
     //   console.log(error);
     // });
 
-    this.storageService = new StorageService();
-    this.storageService.init('tanya');
-    this.storageService.addSyllabus(0);
-
-    this.router.navigate(['/tab1']);
+    this.storageService.createUser('tanya');
+    // this.storageService.addSyllabus(0);
+    //
+    // this.router.navigate(['/tab1']);
   }
 }
