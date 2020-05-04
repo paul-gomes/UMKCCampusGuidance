@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>News</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-list>
+    <ion-list-header>
+      Class: Advanced Software Enginnering Topic: {{topic}}
+    </ion-list-header>
+
+    <ion-item *ngFor="let data of graphDataList">
+      <!-- <ion-avatar slot="start">
+        <img src="./avatar-finn.png" />
+      </ion-avatar> -->
+      <ion-label>
+        <h2>{{data.name}}</h2>
+        <h3>{{data.description}}</h3>
+        <h3>{{data.detailDescription.url}}</h3>
+        <p class="ion-text-wrap">{{data.detailDescription.articleBody}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

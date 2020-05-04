@@ -1,43 +1,51 @@
-import { Component, OnInit } from '@angular/core';
-import {AlertController} from '@ionic/angular';
-import {Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AngularFireAuth} from '@angular/fire/auth';
-import {StorageService} from '../storage/storage.service';
+import { Component, OnInit } from "@angular/core";
+import { AlertController } from "@ionic/angular";
+import { Router } from "@angular/router";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AngularFireAuth } from "@angular/fire/auth";
+import { StorageService } from "../storage/storage.service";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+  selector: "app-login",
+  templateUrl: "./login.page.html",
+  styleUrls: ["./login.page.scss"],
 })
 export class LoginPage implements OnInit {
-    usrUMKCCampus;
-    passUMKCCampus;
-    group: FormGroup;
-    constructor(private builder: FormBuilder, private routerUMKCCampus: Router, public UMKCAlertController: AlertController,
-                private firebaseUMKCCampus: AngularFireAuth, private storageService: StorageService) {
-    }
+  usrUMKCCampus;
+  passUMKCCampus;
+  group: FormGroup;
+  constructor(
+    private builder: FormBuilder,
+    private routerUMKCCampus: Router,
+    public UMKCAlertController: AlertController,
+    private firebaseUMKCCampus: AngularFireAuth,
+    private storageService: StorageService
+  ) {}
 
-    ngOnInit() {
-        this.group = this.builder.group({
-            usrUMKCCampus: ['', Validators.required],
-            passUMKCCampus: ['', Validators.required]
-        });
-    }
+  ngOnInit() {
+    this.group = this.builder.group({
+      usrUMKCCampus: ["", Validators.required],
+      passUMKCCampus: ["", Validators.required],
+    });
+  }
 
-
-    async ResetEmailUMKCCampus() {
-        const alert = await this.UMKCAlertController.create({
-            header: 'Reset Email',
-            subHeader: '',
-            inputs: [
-                { name: 'email', type: 'text', placeholder: 'Please enter your email' }],
-            buttons: [
-                { text: 'Cancel', role: 'cancel', cssClass: 'secondary'},
-                { text: 'Okay', handler: data => { this.firebaseUMKCCampus.auth.sendPasswordResetEmail(data.email); }
-                }
-            ]
-        });
+  async ResetEmailUMKCCampus() {
+    const alert = await this.UMKCAlertController.create({
+      header: "Reset Email",
+      subHeader: "",
+      inputs: [
+        { name: "email", type: "text", placeholder: "Please enter your email" },
+      ],
+      buttons: [
+        { text: "Cancel", role: "cancel", cssClass: "secondary" },
+        {
+          text: "Okay",
+          handler: (data) => {
+            this.firebaseUMKCCampus.auth.sendPasswordResetEmail(data.email);
+          },
+        },
+      ],
+    });
         await alert.present();
         //  this.firebase.auth.sendPasswordResetEmail(this.Username);
     }
@@ -66,6 +74,4 @@ export class LoginPage implements OnInit {
         //     alert('Please complete in all values');
         //     return;
         // }
-    }
-}
 
