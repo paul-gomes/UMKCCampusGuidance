@@ -15,6 +15,8 @@ import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireModule } from "@angular/fire";
 import { Geolocation } from "@ionic-native/geolocation/ngx";
 import { LaunchNavigator } from "@ionic-native/launch-navigator/ngx";
+import { Camera } from "@ionic-native/Camera/ngx";
+import { AngularFirestoreModule } from "@angular/fire/firestore";
 
 const UMKCCampusFireBase = {
   apiKey: "AIzaSyAhF2kSBAYoA4HRMA4Tkw60FuMGC6fABEI",
@@ -24,7 +26,7 @@ const UMKCCampusFireBase = {
   storageBucket: "umkccampusguidance.appspot.com",
   messagingSenderId: "602152243652",
   appId: "1:602152243652:web:6c457413b4b6a215921491",
-  measurementId: "G-7NHWDG3EGN"
+  measurementId: "G-7NHWDG3EGN",
 };
 
 @NgModule({
@@ -39,15 +41,17 @@ const UMKCCampusFireBase = {
     ReactiveFormsModule,
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    AngularFireModule.initializeApp(UMKCCampusFireBase)
+    AngularFirestoreModule,
+    AngularFireModule.initializeApp(UMKCCampusFireBase),
   ],
   providers: [
     Geolocation,
     LaunchNavigator,
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    Camera,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
