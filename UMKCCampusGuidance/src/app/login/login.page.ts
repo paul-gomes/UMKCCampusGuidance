@@ -46,32 +46,32 @@ export class LoginPage implements OnInit {
         },
       ],
     });
-    await alert.present();
-    //  this.firebase.auth.sendPasswordResetEmail(this.Username);
-  }
-  LogInUMKCCampus(e) {
-    try {
-      this.firebaseUMKCCampus.auth
-        .signInWithEmailAndPassword(this.usrUMKCCampus, this.passUMKCCampus)
-        .then(() => {
-          this.storageService.loadUser(this.usrUMKCCampus, () => {
-            if (this.storageService.getCourseList().length === 0) {
-              this.routerUMKCCampus.navigate(["/upload"]);
-            } else {
-              this.routerUMKCCampus.navigate(["/tab4"]);
-            }
-          });
-          // tslint:disable-next-line:no-shadowed-variable
-        })
-        .catch((e) => {
-          alert(e);
-        });
-    } catch (e) {
-      console.error(e);
+        await alert.present();
+        //  this.firebase.auth.sendPasswordResetEmail(this.Username);
     }
-    // if (this.group.invalid) {
-    //     alert('Please complete in all values');
-    //     return;
-    // }
-  }
-}
+    LogInUMKCCampus(e) {
+        try {
+            this.firebaseUMKCCampus.auth.signInWithEmailAndPassword(this.usrUMKCCampus, this.passUMKCCampus).then(() => {
+
+                this.routerUMKCCampus.navigate(['/tab1']);
+
+                this.storageService.loadUser(this.usrUMKCCampus, () => {
+                    if (this.storageService.getCourseList().length === 0) {
+                        this.routerUMKCCampus.navigate(['/upload']);
+                    } else {
+                        this.routerUMKCCampus.navigate(['/tab1']);
+                    }
+                });
+
+                // tslint:disable-next-line:no-shadowed-variable
+            }).catch((e) => {
+                alert(e);
+            });
+        } catch (e) {
+            console.error(e);
+        }
+        // if (this.group.invalid) {
+        //     alert('Please complete in all values');
+        //     return;
+        // }
+

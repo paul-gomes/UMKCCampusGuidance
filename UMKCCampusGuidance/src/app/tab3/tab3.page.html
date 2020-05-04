@@ -1,17 +1,78 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header>
+  <ion-toolbar color="primary">
     <ion-title>
-      Tab 3
+      {{ASEvieTitle}}
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="ReturnToday()">Today</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-card>
+    <ion-card-header tappable (click)="CC = !CC">
+      <ion-card-title>New Event</ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="!CC">
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+      <ion-item>
+        <ion-input type="text" placeholder="Please Type the Title" [(ngModel)]="ASEev.ASEti"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="text" placeholder="Please Write the Description" [(ngModel)]="ASEev.ASEde"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Start date and time</ion-label>
+        <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="ASEev.ASEstaTime" [min]="ASEmiDate"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>End date and time</ion-label>
+        <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="ASEev.ASEenTime" [min]="ASEmiDate"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>All Day:</ion-label>
+        <ion-checkbox [(ngModel)]="ASEev.ASEalDay"></ion-checkbox>
+      </ion-item>
+      <ion-button fill="outline" expand="block" (click)="ASEadEvent()" [disabled]="ASEev.ASEti == ''">Add Event</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-row>
+    <ion-col size="3">
+      <ion-button expand="block" [color]="ASECalendar.ASEmo == 'month' ? 'primary' : 'secondary'" (click)="ASEchMode('month')">Month</ion-button>
+    </ion-col>
+    <ion-col size="3">
+      <ion-button expand="block" [color]="ASECalendar.ASEmo == 'week' ? 'primary' : 'secondary'" (click)="ASEchMode('week')">Week</ion-button>
+    </ion-col>
+    <ion-col size="3">
+      <ion-button expand="block" [color]="ASECalendar.ASEmo == 'day' ? 'primary' : 'secondary'" (click)="ASEchMode('day')">Day</ion-button>
+    </ion-col>
+
+    <ion-col size="6">
+      <ion-button fill="clear" (click)="ASEbaCalender()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-col>
+
+    <ion-col size="6" >
+      <ion-button fill="clear" (click)="ASEneCalendar()">
+        <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <calendar
+          [eventSource]="ASEevSource"
+          [calendarMode]="ASECalendar.ASEmo"
+          [currentDate]="ASECalendar.ASEcuDate"
+          (onEventSelected)="ASEEveSelected($event)"
+          (onTitleChanged)="ASEViTiChanged($event)"
+          (onTimeSelected)="ASETiSelected($event)"
+          startHour="6"
+          endHour="20"
+          step="30"
+          startingDayWeek="1">
+  </calendar>
+
 </ion-content>
