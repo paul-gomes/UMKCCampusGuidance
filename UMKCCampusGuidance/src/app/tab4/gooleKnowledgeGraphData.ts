@@ -1,7 +1,6 @@
 export interface IGoogleKnowledgeGraphData {
   name: string;
   description: string;
-  url: string;
   detailDescription: IDetailDescription;
 }
 
