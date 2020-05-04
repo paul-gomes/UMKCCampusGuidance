@@ -1,7 +1,8 @@
 {
   "name": "UMKCCampusGuidance",
   "integrations": {
-    "cordova": {}
+    "cordova": {},
+    "capacitor": {}
   },
   "type": "angular"
 }
