@@ -3,6 +3,7 @@ import {AlertController} from '@ionic/angular';
 import {Router} from '@angular/router';
 import {AngularFireDatabase} from '@angular/fire/database';
 import {AngularFireAuth} from '@angular/fire/auth';
+import {StorageService} from '../storage/storage.service';
 
 @Component({
   selector: 'app-signup',
@@ -17,10 +18,9 @@ export class SignupPage {
   CpassUMKCCampus;
 
   constructor(public UMKCAlertController: AlertController, private FirebaseDB: AngularFireDatabase,
-              private  routerUMKCCampus: Router, private firebaseUMKCCampus: AngularFireAuth) {
+              private  routerUMKCCampus: Router, private firebaseUMKCCampus: AngularFireAuth,
+              private storageService: StorageService) {
   }
-
-
 
   signUpUMKCCampus() {
     try {
@@ -33,7 +33,9 @@ export class SignupPage {
           }).then();
         });
         alert('Registration Done!');
-        this.routerUMKCCampus.navigate(['/login']);
+        this.storageService.loadUser(this.usrUMKCCampus, () => {
+          this.routerUMKCCampus.navigate(['/upload']);
+        });
       }).catch((e) => {
         alert(e);
       });

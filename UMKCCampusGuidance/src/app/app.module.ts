@@ -14,6 +14,12 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire';
 import {NgCalendarModule} from 'ionic2-calendar';
+import { AngularFireDatabaseModule} from '@angular/fire/database';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireModule } from '@angular/fire';
+
+import { Camera } from '@ionic-native/Camera/ngx';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
 
 const UMKCCampusFireBase = {
   apiKey: 'AIzaSyAhF2kSBAYoA4HRMA4Tkw60FuMGC6fABEI',
@@ -38,12 +44,14 @@ const UMKCCampusFireBase = {
     ReactiveFormsModule,
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    AngularFireModule.initializeApp(UMKCCampusFireBase),
-    NgCalendarModule
+    NgCalendarModule,
+    AngularFirestoreModule,
+    AngularFireModule.initializeApp(UMKCCampusFireBase)
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

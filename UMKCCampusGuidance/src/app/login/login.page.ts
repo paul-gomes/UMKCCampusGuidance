@@ -3,6 +3,7 @@ import {AlertController} from '@ionic/angular';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AngularFireAuth} from '@angular/fire/auth';
+import {StorageService} from '../storage/storage.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginPage implements OnInit {
     passUMKCCampus;
     group: FormGroup;
     constructor(private builder: FormBuilder, private routerUMKCCampus: Router, public UMKCAlertController: AlertController,
-                private firebaseUMKCCampus: AngularFireAuth) {
+                private firebaseUMKCCampus: AngularFireAuth, private storageService: StorageService) {
     }
 
     ngOnInit() {
@@ -43,7 +44,17 @@ export class LoginPage implements OnInit {
     LogInUMKCCampus(e) {
         try {
             this.firebaseUMKCCampus.auth.signInWithEmailAndPassword(this.usrUMKCCampus, this.passUMKCCampus).then(() => {
-                this.routerUMKCCampus.navigate(['/tab3']);
+
+                this.routerUMKCCampus.navigate(['/tab1']);
+
+                this.storageService.loadUser(this.usrUMKCCampus, () => {
+                    if (this.storageService.getCourseList().length === 0) {
+                        this.routerUMKCCampus.navigate(['/upload']);
+                    } else {
+                        this.routerUMKCCampus.navigate(['/tab1']);
+                    }
+                });
+
                 // tslint:disable-next-line:no-shadowed-variable
             }).catch((e) => {
                 alert(e);
