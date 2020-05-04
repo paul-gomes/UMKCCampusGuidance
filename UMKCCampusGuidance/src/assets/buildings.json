@@ -21,7 +21,7 @@
       "lat": 39.031722
     },
     {
-      "name": "Hagg Hall",
+      "name": "Haag Hall",
       "long": -94.576424,
       "lat": 39.03296
     },
@@ -29,6 +29,11 @@
       "name": "Fine Art Building",
       "long": -94.577423,
       "lat": 39.035494
+    },
+    {
+      "name": "Bloch",
+      "long": -94.580983,
+      "lat": 39.033596
     }
   ]
 }
