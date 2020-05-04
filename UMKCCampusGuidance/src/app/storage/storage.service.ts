@@ -113,7 +113,21 @@ export class StorageService {
       }
     });
 
-    this.addSyllabus(0);
+    this.addSyllabus(0, [
+      {date: '4/29', topic: 'Bubble Sort'},
+      {date: '5/3', topic: 'Quick Sort'},
+      {date: '5/9', topic: 'Merge Sort'},
+      {date: '5/15', topic: 'Heap Sort'}]);
+    this.addSyllabus(1, [
+      {date: '4/30', topic: 'MEAN Stack'},
+      {date: '5/4', topic: 'Angular'},
+      {date: '5/10', topic: 'Javascript'},
+      {date: '5/16', topic: 'Express JS'}]);
+    this.addSyllabus(3, [
+      {date: '4/31', topic: 'Java'},
+      {date: '5/5', topic: 'C++'},
+      {date: '5/11', topic: 'Javascript'},
+      {date: '5/17', topic: 'Python'}]);
 
     this.user.schedule.courseList.forEach((course, index) => {
       const courseObj = { name: course.name, building: course.building, roomNumber: course.roomNumber, days: course.days,
@@ -128,12 +142,8 @@ export class StorageService {
     });
   }
 
-  addSyllabus(courseIndex) {
-      this.user.schedule.courseList[courseIndex].syllabus = [
-          {date: '4/29', topic: 'Bubble Sort'},
-          {date: '5/3', topic: 'Quick Sort'},
-          {date: '5/9', topic: 'Merge Sort'},
-          {date: '5/15', topic: 'Heap Sort'}];
+  addSyllabus(courseIndex, syllabus) {
+      this.user.schedule.courseList[courseIndex].syllabus = syllabus;
 
     // TODO: add to firestore
   }
@@ -160,34 +170,49 @@ export class StorageService {
       return buildings;
   }
 
-  // returns the most recent upcoming topic
-  getTopic() {
-      this.addSyllabus(0);
+  // returns the most recent upcoming topic for each class
+  getTopics() {
+      const selTopics = [];
 
       let selTopic = '';
+      let selDateStr = '';
       let selDate;
       const currentDate = new Date();
       this.user.schedule.courseList.forEach(course => {
           if (course.syllabus !== undefined && course.syllabus !== null) {
+              selTopic = '';
+
               course.syllabus.forEach(topic => {
                   const dateStrArray = topic.date.split('/');
                   // tslint:disable-next-line:radix
                   const topicDate = new Date(currentDate.getUTCFullYear(), parseInt(dateStrArray[0]) - 1, parseInt(dateStrArray[1]));
-                  console.log(topicDate >= currentDate);
-                  console.log(topicDate < selDate);
+
                   if (selTopic === '') {
                       selTopic = topic.topic;
+                      selDateStr = topic.date;
                       selDate = topicDate;
+
                   } else if (selDate < currentDate && topicDate > selDate) {
                       selTopic = topic.topic;
+                      selDateStr = topic.date;
                       selDate = topicDate;
+
                   } else if (topicDate >= currentDate && topicDate < selDate) {
                       selTopic = topic.topic;
+                      selDateStr = topic.date;
                       selDate = topicDate;
                   }
               });
+
+              if (selTopic !== '') {
+                  console.log(selTopics.some(() => selTopics.courseName === course.name));
+                  if (!selTopics.some(() => selTopics.courseName === course.name)) {
+                      selTopics.push({courseName: course.name, topic: selTopic, date: selDateStr});
+                  }
+              }
           }
       });
-      return selTopic;
+      console.log(selTopics);
+      return selTopics;
   }
 }
