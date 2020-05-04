@@ -88,7 +88,7 @@ export class UploadSyllabusPage implements OnInit {
 
   selectCourse(index) {
     if (this.storageService.getCourseList().length !== 0) {
-      this.storageService.addSyllabus(index);
+      // this.storageService.addSyllabus(index);
     }
   }
 
