@@ -5,17 +5,30 @@
 </ion-header>
 
 <ion-content fullscreen>
-  <ion-list>
-    <ion-list-header>
-      <ion-label>Course: Advanced Software Enginnering</ion-label>
-    </ion-list-header>
+  <ion-item>
+    <ion-label>Course</ion-label>
+    <ion-select
+      value="{{selectedCourse}}"
+      interface="action-sheet"
+      (ionChange)="onCourseChange($event)"
+    >
+      <ion-item *ngFor="let course of courses">
+        <ion-select-option value="{{course}}">{{course}}</ion-select-option>
+      </ion-item>
+    </ion-select>
+  </ion-item>
+
+  <ion-list *ngIf="selectedCourse != ''">
     <ion-item-group>
       <ion-item-divider>
-        <ion-label>Topic: {{topic}}</ion-label>
+        <ion-label>Topic: {{displayTopic.topic}}</ion-label>
+      </ion-item-divider>
+      <ion-item-divider>
+        <ion-label>Date: {{displayTopic.date}}</ion-label>
       </ion-item-divider>
     </ion-item-group>
 
-    <ion-item *ngFor="let data of graphDataList">
+    <ion-item *ngFor="let data of displayTopic.googleKnowledgeGraphData">
       <ion-card>
         <ion-card-header>
           <ion-card-subtitle>{{data.description}}</ion-card-subtitle>
@@ -24,19 +37,15 @@
         <ion-card-content>
           {{data.detailDescription != null? data.detailDescription.articleBody :
           ""}}
+          <ion-button
+            fill="outline"
+            size="small"
+            color="secondary"
+            (click)="openModalDetailed($event, data.detailDescription.url, displayTopic.topic)"
+            >read more</ion-button
+          >
         </ion-card-content>
       </ion-card>
-      <!-- <ion-label>
-        <h2>{{data.name}}</h2>
-        <h3>{{data.description}}</h3>
-        <h3>
-          {{data.detailDescription != null? data.detailDescription.url : ""}}
-        </h3>
-        <p class="ion-text-wrap">
-          {{data.detailDescription != null? data.detailDescription.articleBody :
-          ""}}
-        </p>
-      </ion-label> -->
     </ion-item>
   </ion-list>
 </ion-content>
