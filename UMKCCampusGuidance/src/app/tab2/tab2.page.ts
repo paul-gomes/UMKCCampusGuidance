@@ -6,12 +6,9 @@ import {
   LaunchNavigator,
   LaunchNavigatorOptions,
 } from "@ionic-native/launch-navigator/ngx";
-import { IonButton } from "@ionic/angular";
 import { StorageService } from "../storage/storage.service";
-import * as firebase from "firebase";
 import { IClasses } from "./classes";
 import { IUserClassInfo, ICourse } from "./userClassInfo";
-import { callInstance } from "@ionic-native/core/decorators/common";
 
 @Component({
   selector: "app-tab2",

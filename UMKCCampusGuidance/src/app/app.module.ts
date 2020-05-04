@@ -6,22 +6,19 @@ import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireModule } from '@angular/fire';
-import {NgCalendarModule} from 'ionic2-calendar';
-import { AngularFireDatabaseModule} from '@angular/fire/database';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireModule } from '@angular/fire';
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { HttpClientModule } from "@angular/common/http";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AngularFireDatabaseModule } from "@angular/fire/database";
+import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFireModule } from "@angular/fire";
+import { NgCalendarModule } from "ionic2-calendar";
 import { Geolocation } from "@ionic-native/geolocation/ngx";
 import { LaunchNavigator } from "@ionic-native/launch-navigator/ngx";
-import { Camera } from '@ionic-native/Camera/ngx';
-import {AngularFirestoreModule} from '@angular/fire/firestore';
-
+import { Camera } from "@ionic-native/Camera/ngx";
+import { AngularFirestoreModule } from "@angular/fire/firestore";
+import { ModalPageComponent } from "./modal-page/modal-page.component";
 
 const UMKCCampusFireBase = {
   apiKey: "AIzaSyAhF2kSBAYoA4HRMA4Tkw60FuMGC6fABEI",
@@ -35,8 +32,8 @@ const UMKCCampusFireBase = {
 };
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, ModalPageComponent],
+  entryComponents: [ModalPageComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

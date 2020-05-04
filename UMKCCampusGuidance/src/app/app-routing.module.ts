@@ -56,6 +56,13 @@ const routes: Routes = [
     loadChildren: () =>
       import("./tabs/tabs.module").then((m) => m.TabsPageModule),
   },
+  {
+    path: "ModalPage",
+    loadChildren: () =>
+      import("./modal-page/modal-page.component").then(
+        (m) => m.ModalPageComponent
+      ),
+  },
 ];
 @NgModule({
   imports: [
