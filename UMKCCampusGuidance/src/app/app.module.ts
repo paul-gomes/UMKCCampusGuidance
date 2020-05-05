@@ -19,6 +19,7 @@ import { LaunchNavigator } from "@ionic-native/launch-navigator/ngx";
 import { Camera } from "@ionic-native/Camera/ngx";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { ModalPageComponent } from "./modal-page/modal-page.component";
+import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
 
 const UMKCCampusFireBase = {
   apiKey: "AIzaSyAhF2kSBAYoA4HRMA4Tkw60FuMGC6fABEI",
@@ -49,6 +50,7 @@ const UMKCCampusFireBase = {
   ],
   providers: [
     Geolocation,
+    InAppBrowser,
     LaunchNavigator,
     StatusBar,
     SplashScreen,
