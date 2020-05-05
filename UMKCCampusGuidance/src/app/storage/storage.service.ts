@@ -191,8 +191,6 @@ export class StorageService {
 
   addSyllabus(courseIndex, syllabus) {
     this.user.schedule.courseList[courseIndex].syllabus = syllabus;
-
-    // TODO: add to firestore
   }
 
   getCourseList() {
