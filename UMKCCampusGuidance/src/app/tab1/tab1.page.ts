@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { StorageService } from '../storage/storage.service';
 
 @Component({
   selector: 'app-tab1',
@@ -7,5 +9,18 @@ import { Component } from '@angular/core';
 })
 export class Tab1Page {
 
-  constructor() {}
+  constructor(private router: Router, private storageService: StorageService) {}
+
+  uploadSchedule() {
+    this.router.navigate(['/upload']);
+  }
+
+  addSyllabus() {
+    this.router.navigate(['/upload-syllabus']);
+  }
+
+  signOut() {
+    this.storageService.signOut();
+    this.router.navigate(['/login']);
+  }
 }

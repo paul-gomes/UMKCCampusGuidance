@@ -49,7 +49,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/login',
+        redirectTo: '/tabs/tab4',
         pathMatch: 'full'
       }
     ]

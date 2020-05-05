@@ -58,7 +58,7 @@ export class LoginPage implements OnInit {
             if (this.storageService.getCourseList().length === 0) {
               this.routerUMKCCampus.navigate(["/upload"]);
             } else {
-              this.routerUMKCCampus.navigate(["/tabs/tab1"]);
+              this.routerUMKCCampus.navigate(["/tabs"]);
             }
           });
 

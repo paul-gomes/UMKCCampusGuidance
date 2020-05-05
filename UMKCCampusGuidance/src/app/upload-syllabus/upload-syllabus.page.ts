@@ -93,6 +93,6 @@ export class UploadSyllabusPage implements OnInit {
   }
 
   done() {
-    this.router.navigate(['/tab3']);
+    this.router.navigate(['/tabs']);
   }
 }
