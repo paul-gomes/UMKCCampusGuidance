@@ -1,9 +1,16 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="ion-toolbar-color">
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-button (click)="closeModal()"
+        ><ion-icon name="arrow-back-outline"></ion-icon
+      ></ion-button>
     </ion-buttons>
     <ion-title>Article related {{ topic }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openWebpage()"
+        ><ion-icon name="globe-outline"></ion-icon
+      ></ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

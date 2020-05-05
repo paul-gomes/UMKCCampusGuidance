@@ -6,3 +6,11 @@ ion-content ion-toolbar {
 *::-webkit-scrollbar {
   display: none;
 }
+
+ion-title {
+  color: white;
+}
+
+.ion-toolbar-color {
+  --background: #0e67a4;
+}
