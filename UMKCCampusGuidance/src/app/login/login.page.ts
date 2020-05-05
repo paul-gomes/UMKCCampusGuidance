@@ -54,13 +54,11 @@ export class LoginPage implements OnInit {
       this.firebaseUMKCCampus.auth
         .signInWithEmailAndPassword(this.usrUMKCCampus, this.passUMKCCampus)
         .then(() => {
-          this.routerUMKCCampus.navigate(["/tab1"]);
-
           this.storageService.loadUser(this.usrUMKCCampus, () => {
             if (this.storageService.getCourseList().length === 0) {
               this.routerUMKCCampus.navigate(["/upload"]);
             } else {
-              this.routerUMKCCampus.navigate(["/tab1"]);
+              this.routerUMKCCampus.navigate(["/tabs"]);
             }
           });
 

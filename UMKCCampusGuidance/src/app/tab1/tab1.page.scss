@@ -1,3 +1,19 @@
 ion-content ion-toolbar {
   --background: translucent;
 }
+
+.user {
+  width: 75px;
+  height: 75px;
+}
+
+.btn-container {
+  margin: 25px auto;
+  width: 75%;
+}
+
+.container {
+  margin: 75px auto;
+  width: 75%;
+  text-align: center;
+}

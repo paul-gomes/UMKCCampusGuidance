@@ -1,17 +1,21 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>
-      Tab 1
+      Account
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="container">
+<!--    <div>-->
+<!--      <ion-img style="align-items: center" src="./assets/icon/account.png" class="user"></ion-img>-->
+<!--    </div>-->
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+    <div class="btn-container">
+      <ion-button expand="block" color="primary" (click)="uploadSchedule()">Upload Schedule</ion-button> <br>
+      <ion-button expand="block" color="success" (click)="addSyllabus()">Add Syllabus</ion-button> <br>
+      <ion-button expand="block" color="danger" (click)="signOut()">Sign Out</ion-button>
+    </div>
+  </div>
 </ion-content>

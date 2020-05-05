@@ -18,6 +18,10 @@ export class StorageService {
     this.scheduleCollection = this.firestore.collection("/schedules");
   }
 
+  signOut() {
+    this.user = null;
+  }
+
   loadUser(username: string, callback) {
     if (this.user !== undefined && this.user !== null) {
       if (this.user.username === username) {
@@ -154,8 +158,8 @@ export class StorageService {
     this.addSyllabus(1, [
       { date: "4/30", topic: "MEAN Stack" },
       { date: "5/4", topic: "Angular" },
-      { date: "5/10", topic: "Javascript" },
-      { date: "5/16", topic: "Express JS" },
+      { date: "5/10", topic: "Express JS" },
+      { date: "5/16", topic: "Javascript" },
     ]);
     this.addSyllabus(3, [
       { date: "4/31", topic: "Java" },
@@ -191,8 +195,6 @@ export class StorageService {
 
   addSyllabus(courseIndex, syllabus) {
     this.user.schedule.courseList[courseIndex].syllabus = syllabus;
-
-    // TODO: add to firestore
   }
 
   getCourseList() {
@@ -212,11 +214,13 @@ export class StorageService {
       return buildings;
     }
     this.user.schedule.courseList.forEach((course) => {
-      buildings.push({
-        courseName: course.name,
-        building: course.building,
-        room: course.roomNumber,
-      });
+      if (!buildings.some((x) => x.courseName === course.name)) {
+        buildings.push({
+          courseName: course.name,
+          building: course.building,
+          room: course.roomNumber,
+        });
+      }
     });
     return buildings;
   }
@@ -258,7 +262,6 @@ export class StorageService {
         });
 
         if (selTopic !== "") {
-          console.log(selTopics.some((x) => x.courseName === course.name));
           if (!selTopics.some((x) => x.courseName === course.name)) {
             selTopics.push({
               courseName: course.name,
